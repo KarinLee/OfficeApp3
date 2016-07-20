@@ -71,7 +71,12 @@ InteractiveTutorial.App = new function () {
         */
         $("body").keydown(function (event) {
             if (event.which == 27) {
-                $("#run").focus();
+                if ($("#headercontent")[0].getAttribute("class").toString() == "apiPageHeader") {
+                    $("#run").focus();
+                }
+                if ($("#codeSnippet")[0].getAttribute("class").toString() != "hidden") {
+                    $("#runButton").focus();
+                }
                 $('#toastMessage').hide();
             } //Check for enter and space to mimic the behavior of buttons
             else if (event.which == 13 || event.which == 32) {
@@ -141,6 +146,7 @@ InteractiveTutorial.App = new function () {
         if ((_appHost.toLowerCase() == "excel" || _appHost.toLowerCase() == "word") && _appVersion == "16") {
             $("#tutorialMain").attr("class", "divWrapperInside");
             $("#bottomMenu").removeClass("hidden");
+            $("#bottomMenu").addClass("enableScroll");
             writeLog("ShowCodeSnippets for " + _appHost + ", " + _appBitness + ", " + _appVersion);
         }
         else {

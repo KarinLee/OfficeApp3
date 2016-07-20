@@ -1,7 +1,7 @@
 ﻿html, body {
     height: 100%;
     font-family: "Segoe UI", Tahoma, Verdana, Arial, sans-serif;
-    overflow-y: auto;
+    overflow-y: scroll;
 }
 
 #APILayout {
@@ -497,6 +497,10 @@ li.listItem:hover{
     padding-right: 14px;
 }
 
+#scenariolabel:focus {
+    background-color: #0094ff;
+}
+
 #scenariolabel::-ms-expand{
     display:none;
 }
@@ -521,7 +525,8 @@ li.listItem:hover{
 
 #sampleDescription {
     height:auto;
-    padding:10px;
+    padding:5px;
+    bottom:auto;
 }
 #sampleDescription p{
     margin:5px;
@@ -538,4 +543,16 @@ li.listItem:hover{
     left: 0px; 
     right: 0px; 
     padding: 5px;
+}
+
+#bottomMenu.enableScroll {
+    overflow-y:auto
+}
+
+#groupSelector:focus  {
+    background-color: #0094ff;
+}
+
+#sampleSelector:focus  {
+    background-color: #0094ff;
 }
