@@ -1,7 +1,7 @@
 ﻿html, body {
     height: 100%;
     font-family: "Segoe UI", Tahoma, Verdana, Arial, sans-serif;
-    overflow-y: scroll;
+    overflow-y: auto!important;
 }
 
 #APILayout {
@@ -76,7 +76,7 @@
 #message {   
     font-size: medium;
     padding-left:20px;
-    color: #858484;
+    color: #000000;
     font-size:15px;
 }
 
@@ -483,7 +483,7 @@ li.listItem:hover{
     border:none;
     font-size:15px;
     color:white;    
-    height: auto;
+    height: 25px;
     padding:0;
 }
 
@@ -495,10 +495,6 @@ li.listItem:hover{
     background-repeat: no-repeat;
     background-position: right; 
     padding-right: 14px;
-}
-
-#scenariolabel:focus {
-    background-color: #0094ff;
 }
 
 #scenariolabel::-ms-expand{
@@ -525,8 +521,7 @@ li.listItem:hover{
 
 #sampleDescription {
     height:auto;
-    padding:5px;
-    bottom:auto;
+    padding:10px;
 }
 #sampleDescription p{
     margin:5px;
@@ -545,14 +540,59 @@ li.listItem:hover{
     padding: 5px;
 }
 
-#bottomMenu.enableScroll {
-    overflow-y:auto
+.arrow, .arrow:hover {
+    color: #337147;
+    font-weight:600;
 }
 
-#groupSelector:focus  {
-    background-color: #0094ff;
+@media screen and (-ms-high-contrast:none){
+    #imgNext_BlackBackground {
+        display:none;
+    }
+    #imgBack_BlackBackground{
+        display:none;
+    }
+}
+ 
+@media screen and (-ms-high-contrast:active)
+{
+     #sampleSelector{
+     overflow: hidden; 
+     background:url("/Images/arrowGray.png");
+     border:1px solid #9E9E9E;
+    }
+     #groupSelector{
+     overflow: hidden; 
+     background:url("/Images/arrowGray.png");
+     border:1px solid #9E9E9E;
+    }
+
+    li.listItem {
+    background-color:#337147;
+    color:white;
+    }
+
+    #imgNext_WhiteBackground{
+        display:none;
+    }
+    #imgBack_WhiteBackground{
+        display:none;
+    } 
+}
+@media screen and (-ms-high-contrast:black-on-white) {
+    #imgNext_BlackBackground {
+        display:none;
+    }
+    #imgBack_BlackBackground{
+        display:none;
+    }
+    #imgNext_WhiteBackground{
+        display:block;
+        background-color: black;
+    }
+    #imgBack_WhiteBackground{
+        display:block;
+        background-color: black;
+    } 
 }
 
-#sampleSelector:focus  {
-    background-color: #0094ff;
-}

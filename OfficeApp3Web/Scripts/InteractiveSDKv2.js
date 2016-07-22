@@ -64,7 +64,7 @@ InteractiveTutorial.App = new function () {
         })
         $("#run").click(self.executeCode);
         $("#next").click(self.nextStep);
-
+        
         /*
         Escape key will move focus to the run code button.  
         Elements with a role of button will also react to enter and space keydown events like a input button
@@ -83,7 +83,20 @@ InteractiveTutorial.App = new function () {
                 var element = $(event.srcElement);
                 if (element.attr("role") == "button") {
                     $(event.srcElement).click();
+                    return false;
                 }
+            }
+
+            if (event.which == 9 && $(':focus')[0].id == "message") {
+                $('#toastMessage').hide();
+                if ($("#headercontent")[0].getAttribute("class").toString() == "apiPageHeader") {
+                    $("#run").focus();
+                }
+                if ($("#codeSnippet")[0].getAttribute("class").toString() != "hidden") {
+                    $("#runButton").focus();
+                }
+
+                return false;
             }
         });
 
@@ -103,7 +116,7 @@ InteractiveTutorial.App = new function () {
         writeLog("ShowList: Tutorial count=" + iTutorialCount);
         if (iTutorialCount == 0) {
             writeError("ShowList: No Supported Scenarios for host " + _appHost)
-            showMessage("Bummer! It doesn't look like any tutorials have been written for this application yet.");
+            console.log("Bummer! It doesn't look like any tutorials have been written for this application yet.");
         }
         else
         {
@@ -127,7 +140,7 @@ InteractiveTutorial.App = new function () {
             var list = $("#scenarioList");
             for (var i = 0; i < iTutorialCount; i++) {
                 var scenario = _contentList[i].scenario;
-                var listItem = $("<li class='listItem' role='button' tabindex='0'><div class='listText checked'><h2>" + self.htmlEncode(scenario) + "</h2></div><img src='Images/checkwhite.png' height='10px' alt='Check' /></li>");
+                var listItem = $("<li class='listItem' role='button' tabindex='0'><div class='listText checked'><h2>" + self.htmlEncode(scenario) + "</h2></div><img src='Images/checkwhite.png' tabindex='0' aria-label='Checked' height='10px' alt='Checked' /></li>");
                 listItem.appendTo(list).click({ "content": _contentList, "index": i }, self.showAPIPage);
                 if (!(_checked[scenario])) {
                     listItem.find('.listText').removeClass('checked');
@@ -257,10 +270,10 @@ InteractiveTutorial.App = new function () {
                 try {
                     eval(script);
                 } catch (e) {
-                    showMessage(e.name + ": " + e.message);
+                    console.log(e.name + ": " + e.message);
                 }
             } else {
-                showMessage("Invalid JavaScript / TypeScript. Please fix the errors in the code editor and try again.");
+                console.log("Invalid JavaScript / TypeScript. Please fix the errors in the code editor and try again.");
             }
 
             AppsTelemetry.perfEnd("RunCode [" + _currentScenario + ", " + _currentTask + "]");
@@ -270,7 +283,7 @@ InteractiveTutorial.App = new function () {
         catch (err) {
             // Catch syntax and runtime errors
             writeError("RunTask: Error [" + err + "]");
-            showMessage('Error executing code: ' + err);
+            console.log('Error executing code: ' + err);
         }
 
     }
@@ -399,7 +412,7 @@ InteractiveTutorial.App = new function () {
             dataType: 'xml',
         }).error(function (jqXHR, textStatus, errorThrown) {
             writeError("Error retrieving XML [" + errorThrown + "]");
-            showMessage(textStatus + " : " + errorThrown);
+            console.log(textStatus + " : " + errorThrown);
         }).success(function (xml) {
             callback($(xml));
         });
@@ -475,11 +488,11 @@ InteractiveTutorial.App = new function () {
             //Loading last task with no Napa, show list button. Last step with Napa after, show next button 
             if (_currentTaskIndex == _tasks.length - 1 && !hasNapaLink) {
                 //show Next button as Tutorial List icon
-                $("<div class='navigationButtons'><div id='previous' role='button' title='Go to the previous step'></div><div id='next' role='button' tabindex='0' title='Go to tutorial list'><img src='Images/list-translucent.png' alt='Tutorial List' /></div></div>").appendTo(navigation);
+                $("<div class='navigationButtons'><div id='previous' role='button' title='Go to the previous step'></div><div id='next' role='button' tabindex='0' title='Go to tutorial list'><img id='imgNext_WhiteBackground' src='Images/list-translucent.png' alt='Go to tutorial list' /><img id='imgNext_BlackBackground' src='/Images/list-translucent-highContrast.png' alt='Go to tutorial list' /></div></div>").appendTo(navigation);
                 _checked[_currentScenario] = true;
             } else {
                 //show Next button as Next icon
-                $("<div class='navigationButtons'><div id='previous' role='button' title='Go to the previous step'></div><div id='next' role='button' tabindex='0' title='Go to the next step'><img src='Images/next-translucent.png' alt='Next' /></div></div>").appendTo(navigation);
+                $("<div class='navigationButtons'><div id='previous' role='button' title='Go to the previous step'></div><div id='next' role='button' tabindex='0' title='Go to the next step'><img id='imgNext_WhiteBackground' src='Images/next-translucent.png' alt='Next' /><img id='imgNext_BlackBackground' src='/Images/next-translucent-highContrast.png' alt='Next' /></div></div>").appendTo(navigation);
             }
 
 
@@ -508,7 +521,7 @@ InteractiveTutorial.App = new function () {
                     window.open(_currentLink, "_blank");
                 });
 
-                navigation.append("<div class='navigationButtons'><div id='previous' role='button' tabindex='0' title='Go to the previous step'></div><div id='next' role='button' tabindex='0' title='Go back to tutorial list'><img src='Images/list-translucent.png' alt='Tutorials' /></div></div>");
+                navigation.append("<div class='navigationButtons'><div id='previous' role='button' tabindex='0' title='Go to the previous step'></div><div id='next' role='button' tabindex='0' title='Go back to tutorial list'><img id='imgNext_WhiteBackground' src='Images/list-translucent.png' alt='Go to tutorial list' /><img id='imgNext_BlackBackground' src='/Images/list-translucent-highContrast.png' alt='Go to tutorial list' /></div></div>");
                 $('#next').click(function () {
                     $("#toastMessage").slideUp();
                     self.showList();
@@ -517,7 +530,7 @@ InteractiveTutorial.App = new function () {
         }
         //If not the 0th task, show previous button
         if (_currentTaskIndex != 0) {
-            $("<img src='Images/back-translucent.png' alt='Previous' /></div>").appendTo("#previous");
+            $("<img id='imgBack_WhiteBackground' src='Images/back-translucent.png' alt='Previous' /><img id='imgBack_BlackBackground' src='/Images/back-translucent-highContrast.png' alt='Previous' /></div>").appendTo("#previous");
             $("#previous").click(function () {
                 $("#toastMessage").slideUp();
                 _currentTaskIndex--;
@@ -616,6 +629,17 @@ InteractiveTutorial.App = new function () {
         
         InteractiveTutorial.App.showTask();
     }
+
+
+    var console = {};
+    console.log = function (text) {
+        if (text.indexOf('arrow button') > -1) {
+            text = text.replace('arrow button', '<span class="arrow">arrow button</span>');
+        }
+        $("#message").html(text);
+        $("#toastMessage").slideDown();
+        $("#closeImage")[0].focus();
+    };
 }
 
 //FancyBox appears over content, triggered upon first use of TryitOut
@@ -636,12 +660,13 @@ function setAndShowFancyBox() {
     });
 }
 
-// Display a message at the bottom of the task pane - called when code is executed in the window
-function showMessage(text) {
-    $("#message").text(text);
-    $("#toastMessage").slideDown();
-    $("#closeImage")[0].focus();
-}
+// Display a message at the bottom of the task pane - called when code is executed in the window. Use console.log (overriding the browser console.log so that if users copy code snippets, they can still run it without modifying
+//function showMessage(text) {
+//    $("#message").text(text);
+//    $("#toastMessage").slideDown();
+//    $("#closeImage")[0].focus();
+//}
+
 
 function writeLog(msg) {
     AppsTelemetry.sendLog(AppsTelemetry.TraceLevel.info, msg);
